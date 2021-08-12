@@ -4,16 +4,17 @@ import { Result } from 'neverthrow';
 import { Row } from 'react-bootstrap';
 import { RouteComponentProps } from 'react-router';
 
-import { ApiTest, apiTestLink, PageProps, resolveGETCall } from '../utils';
+import { ApiTest, apiTestLink, ItemRESTList, PageProps, resolveGETCall } from '../utils';
 
 import BasePage from './elements/BasePage';
 
 import './BrowseView.css';
+import { Link } from 'react-router-dom';
 
 export interface BrowseViewProps extends RouteComponentProps, PageProps { }
 
 interface State {
-	apiValue: ApiTest
+	items: ItemRESTList;
 }
 
 export class BrowseView extends React.Component<BrowseViewProps, State> {
@@ -21,18 +22,16 @@ export class BrowseView extends React.Component<BrowseViewProps, State> {
 		super(props);
 
 		this.state = {
-			apiValue: {
-				blah: ""
-			}
+			items: []
 		};
 	}
 
 	async componentDidMount() {
-		const result: Result<ApiTest, Error> = await resolveGETCall<ApiTest>(apiTestLink);
+		const result: Result<ItemRESTList, Error> = await resolveGETCall<ItemRESTList>('/browse/');
 
 		result
 			.map(res => {
-				this.setState({ apiValue: res });
+				this.setState({ items: res });
 
 				return null; // necessary to silence warning
 			})
@@ -52,9 +51,16 @@ export class BrowseView extends React.Component<BrowseViewProps, State> {
 					</Row>
 
 					<Row>
-						<div>
-							{this.state.apiValue.blah}
-						</div>
+						{this.state.items.map(item => {
+							return (
+								<React.Fragment>
+									<Link to={'/item/' + item.seller_name + "/" + item.name}>
+										{item.name}
+									</Link>
+								</React.Fragment>
+							);
+						})
+						}
 					</Row>
 				</BasePage>
 			</React.Fragment>

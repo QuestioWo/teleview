@@ -800,28 +800,10 @@ class UserFeaturedListView(APIView) :
 
 class BrowseView(APIView):
 	def get(self, request):
-		queryset = Item.objects.all()
+		try:
+			items = Item.objects.all()
 
-		# .../get_items/?is_featured=1
-		is_featured = self.request.query_params.get("is_featured")
-		if is_featured == "1":
-			queryset = queryset.filter(is_featured=True)
-		else:
-			# other filters
-			f_text = self.request.query_params.get("q")
-			if f_text and len(f_text) > 2:
-				queryset = queryset.filter(
-				    Q(name__icontains=f_text) | Q(seller__icontains=f_text)
-				)
-
-		# f_tags = self.request.query_params.get('tags')
-		# if f_tags:
-		#   f_tags = f_tags.split(',')
-		#   for tag in f_tags:
-		#   queryset = queryset.filter()
-
-		# f_region = self.request.query_params.get('region')
-		# if f_region:
-		#   queryset = queryset.filter()
-
-		return queryset
+			return Response([get_public_item_object(item, []) for item in items], status=STATUS_CODE_2xx.SUCCESS.value)
+		except Exception :
+			traceback.print_exc()
+			return Response([], status=STATUS_CODE_4xx.BAD_REQUEST.value)

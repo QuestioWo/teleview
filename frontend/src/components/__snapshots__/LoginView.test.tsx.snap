@@ -123,7 +123,7 @@ exports[`LoginView Should render correctly with mount 1`] = `
                                     <div className=\\"mb-3\\">
                                       <FormLabel column={false} visuallyHidden={false}>
                                         <label className=\\"form-label\\" htmlFor=\\"username\\">
-                                          Username
+                                          username
                                         </label>
                                       </FormLabel>
                                       <FormControl required={true} type=\\"text\\" placeholder=\\"Username\\" value=\\"\\" onChange={[Function: onChange]}>
@@ -135,7 +135,7 @@ exports[`LoginView Should render correctly with mount 1`] = `
                                     <div className=\\"mb-3\\">
                                       <FormLabel column={false} visuallyHidden={false}>
                                         <label className=\\"form-label\\" htmlFor=\\"password\\">
-                                          Password
+                                          password
                                         </label>
                                       </FormLabel>
                                       <FormControl required={true} type=\\"password\\" placeholder=\\"Password\\" value=\\"\\" onChange={[Function: onChange]}>
