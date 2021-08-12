@@ -1,0 +1,24 @@
+.title{
+    font-size: 1.5rem;
+}
+ 
+.b{
+    font-size: 3rem;
+}
+ 
+.browse{
+  padding: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+.product{
+ width:30%;
+ padding:1rem;
+ background-color:rgb(232, 190, 144);
+ margin-left:0.1rem;
+ margin-bottom:0.8rem;
+}
+ 
+.product_img{
+    width:2rem;
+}

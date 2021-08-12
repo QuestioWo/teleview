@@ -1,15 +1,15 @@
 import React from 'react';
 
 import { Result } from 'neverthrow';
-import { Col, Row } from 'react-bootstrap';
+import { Card, Col, Container, Row } from 'react-bootstrap';
 import { RouteComponentProps } from 'react-router';
 
-import { ItemRESTList, PageProps, resolveGETCall } from '../utils';
+import { ItemRESTList, mediaURL, PageProps, resolveGETCall } from '../utils';
 
 import BasePage from './elements/BasePage';
 
 import './BrowseView.css';
-import { Link } from 'react-router-dom';
+import config from '../config';
 
 export interface BrowseViewProps extends RouteComponentProps, PageProps { }
 
@@ -51,24 +51,28 @@ export class BrowseView extends React.Component<BrowseViewProps, State> {
 					</Row>
 
 					<Row>
-						{this.state.items.map(item => {
-							return (
-								<React.Fragment>
-									<Row>
-										<Col>
-											<Link to={'/item/' + item.seller_name + "/" + item.name}>
-												{item.name}
-											</Link>
-											{' '}by{' '}
-											<Link to={'/profile/' + item.seller_name}>
-												{item.seller_name}
-											</Link>
-										</Col>
-									</Row>
-								</React.Fragment>
-							);
-						})
-						}
+						<Col xs={11}>
+
+							<Row className="browse">
+								{this.state.items.map(item => {
+									return (
+										<React.Fragment>
+
+
+											<Card className="product">
+
+												<Card.Img variant="top" src={config.apiURL + mediaURL + item.seller_name + "/" + item.name + "/0.png"} className='item-image' />
+												<Card.Body>
+													<Card.Title className="title " >{item.name} ({item.colour})</Card.Title>
+													<Card.Text className="sub1">by {item.seller_name}</Card.Text>
+												</Card.Body>
+											</Card>
+										</React.Fragment>
+									);
+								})
+								}
+							</Row>
+						</Col>
 					</Row>
 				</BasePage>
 			</React.Fragment >
