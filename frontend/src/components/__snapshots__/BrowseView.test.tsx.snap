@@ -106,7 +106,15 @@ exports[`BrowseView Should render correctly with mount 1`] = `
               </div>
             </Row>
             <Row>
-              <div className=\\"row\\" />
+              <div className=\\"row\\">
+                <Col xs={11}>
+                  <div className=\\"col-11\\">
+                    <Row className=\\"browse\\">
+                      <div className=\\"browse row\\" />
+                    </Row>
+                  </div>
+                </Col>
+              </div>
             </Row>
           </div>
         </div>
@@ -154,7 +162,11 @@ exports[`BrowseView Should render correctly with shallow 1`] = `
         browse
       </h1>
     </Row>
-    <Row />
+    <Row>
+      <Col xs={11}>
+        <Row className=\\"browse\\" />
+      </Col>
+    </Row>
   </BasePage>
 </Fragment>"
 `;

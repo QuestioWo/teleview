@@ -169,8 +169,12 @@ exports[`ProfileView Should render correctly with mount 1`] = `
             </Row>
             <Row>
               <div className=\\"row\\">
-                <Col>
-                  <div className=\\"col\\" />
+                <Col xs={11}>
+                  <div className=\\"col-11\\">
+                    <Row className=\\"browse\\">
+                      <div className=\\"browse row\\" />
+                    </Row>
+                  </div>
                 </Col>
               </div>
             </Row>
@@ -268,7 +272,9 @@ exports[`ProfileView Should render correctly with shallow 1`] = `
       </Col>
     </Row>
     <Row>
-      <Col />
+      <Col xs={11}>
+        <Row className=\\"browse\\" />
+      </Col>
     </Row>
   </BasePage>
 </Fragment>"
