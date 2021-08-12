@@ -84,7 +84,7 @@ export class ItemView extends React.Component<ItemViewProps, State> {
 
 					<Row>
 						<Col>
-							<img className="item-image" src={config.apiURL + mediaURL + this.props.match.params.username + "/" + this.props.match.params.name + "/0.png"} />
+							<img alt="" className="item-image" src={config.apiURL + mediaURL + this.props.match.params.username + "/" + this.props.match.params.name + "/0.png"} />
 						</Col>
 						<Col>
 							<Row>

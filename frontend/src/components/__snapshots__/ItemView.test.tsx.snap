@@ -107,7 +107,7 @@ exports[`ItemView Should render correctly with mount 1`] = `
               <div className=\\"row\\">
                 <Col>
                   <div className=\\"col\\">
-                    <img className=\\"item-image\\" src=\\"http://localhost:8000/api/media/undefined/undefined/0.png\\" />
+                    <img alt=\\"\\" className=\\"item-image\\" src=\\"http://localhost:8000/api/media/undefined/undefined/0.png\\" />
                   </div>
                 </Col>
                 <Col>
@@ -195,7 +195,7 @@ exports[`ItemView Should render correctly with shallow 1`] = `
     </Row>
     <Row>
       <Col>
-        <img className=\\"item-image\\" src=\\"http://localhost:8000/api/media/undefined/undefined/0.png\\" />
+        <img alt=\\"\\" className=\\"item-image\\" src=\\"http://localhost:8000/api/media/undefined/undefined/0.png\\" />
       </Col>
       <Col>
         <Row>

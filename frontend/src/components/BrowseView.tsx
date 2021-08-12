@@ -1,10 +1,10 @@
 import React from 'react';
 
 import { Result } from 'neverthrow';
-import { Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import { RouteComponentProps } from 'react-router';
 
-import { ApiTest, apiTestLink, ItemRESTList, PageProps, resolveGETCall } from '../utils';
+import { ItemRESTList, PageProps, resolveGETCall } from '../utils';
 
 import BasePage from './elements/BasePage';
 
@@ -54,16 +54,24 @@ export class BrowseView extends React.Component<BrowseViewProps, State> {
 						{this.state.items.map(item => {
 							return (
 								<React.Fragment>
-									<Link to={'/item/' + item.seller_name + "/" + item.name}>
-										{item.name}
-									</Link>
+									<Row>
+										<Col>
+											<Link to={'/item/' + item.seller_name + "/" + item.name}>
+												{item.name}
+											</Link>
+											{' '}by{' '}
+											<Link to={'/profile/' + item.seller_name}>
+												{item.seller_name}
+											</Link>
+										</Col>
+									</Row>
 								</React.Fragment>
 							);
 						})
 						}
 					</Row>
 				</BasePage>
-			</React.Fragment>
+			</React.Fragment >
 		);
 	}
 }
