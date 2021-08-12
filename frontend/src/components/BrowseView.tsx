@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Result } from 'neverthrow';
-import { Card, Col, Container, Row } from 'react-bootstrap';
+import { Card, Col, Row } from 'react-bootstrap';
 import { RouteComponentProps } from 'react-router';
 
 import { ItemRESTList, mediaURL, PageProps, resolveGETCall } from '../utils';
