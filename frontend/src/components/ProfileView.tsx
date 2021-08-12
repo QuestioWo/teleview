@@ -2,7 +2,7 @@ import React from 'react';
 
 import { FaCheck, FaTimes, FaSpinner, FaList, FaTrash, FaPlus } from 'react-icons/fa';
 import { Result } from 'neverthrow';
-import { Button, Col, Form, InputGroup, Offcanvas, OverlayTrigger, Row, Tooltip } from 'react-bootstrap';
+import { Button, Card, Col, Form, InputGroup, Offcanvas, OverlayTrigger, Row, Tooltip } from 'react-bootstrap';
 import { RouteComponentProps } from 'react-router';
 import { Link } from 'react-router-dom';
 
@@ -829,20 +829,26 @@ export class ProfileView extends React.Component<ProfileViewProps, State> {
 						}
 					</Row>
 					<Row>
-						<Col>
-							{this.state.items.map(item => {
-								return (
-									<React.Fragment>
-										<Col>
-											<Link to={'/item/' + this.props.match.params.username + "/" + item.name}>
-												{item.name}
-											</Link>
-										</Col>
-									</React.Fragment>
-								)
-							})
+						<Col xs={11}>
 
-							}
+							<Row className="browse">
+								{this.state.items.map(item => {
+									return (
+										<React.Fragment>
+											<Card className="product">
+
+												<Card.Img variant="top" src={config.apiURL + mediaURL + item.seller_name + "/" + item.name + "/0.png"} className='item-image' />
+												<Card.Body>
+													<Card.Title className="title " >{item.name} ({item.colour})</Card.Title>
+													<Card.Text className="sub1">by {item.seller_name}</Card.Text>
+												</Card.Body>
+											</Card>
+										</React.Fragment>
+									)
+								})
+
+								}
+							</Row>
 						</Col>
 					</Row>
 				</BasePage>
