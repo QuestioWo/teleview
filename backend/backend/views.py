@@ -15,7 +15,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics
 
 from backend.models import User, Item, ItemType, Order
-from backend.serializers import ItemSerializer, SellerSerializer
+from backend.serializer import ItemSerializer, SellerSerializer
 from backend.utils import (
 	get_tokens_for_user,
 	get_public_user_object,
