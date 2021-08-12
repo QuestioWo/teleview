@@ -1,0 +1,35 @@
+.t{
+    font-size: 3rem;
+    
+}
+
+.sub1{
+line-height: 2;
+}
+
+.sub2{
+    line-height:1.6;
+}
+
+.s{
+    line-height:2;
+}
+
+
+.p1{
+     background-color:rgb(232, 190, 144);
+
+}
+
+.p2{
+    margin-left: 2rem;
+
+}
+
+.product{
+    border-radius: 0;
+    padding:1rem;
+    background-color:rgb(232, 190, 144);
+
+
+}

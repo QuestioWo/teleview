@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Result } from 'neverthrow';
-import { Row } from 'react-bootstrap';
+import { Container, Col, Row } from 'react-bootstrap';
 import { RouteComponentProps } from 'react-router';
 
 import { ApiTest, apiTestLink, PageProps, resolveGETCall } from '../utils';
@@ -46,21 +46,33 @@ export class LoginView extends React.Component<LoginViewProps, State> {
 		return (
 			<React.Fragment>
 				<BasePage {...this.props}>
-					<Row>
-						<h1>
-							Login
-            </h1>
-					</Row>
+					<Container>
+						<Row>
+							<Col></Col>
 
-					<Row>
-						<div>
-							{this.state.apiValue.blah}
-						</div>
-					</Row>
+							<Col xs={6}>
+								<Row>
+									<h1 className="title">
+										Login
+									</h1>
+								</Row>
 
-					<Row>
-						<LoginForm {...this.props} />
-					</Row>
+								<Row>
+									<div>
+										{this.state.apiValue.blah}
+									</div>
+								</Row>
+
+								<Row>
+									<LoginForm {...this.props} />
+								</Row>
+							</Col>
+
+							<Col></Col>
+
+						</Row>
+					</Container >
+
 				</BasePage>
 			</React.Fragment>
 		);

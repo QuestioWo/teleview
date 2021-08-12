@@ -1,8 +1,9 @@
 import React from 'react';
 
 import { Result } from 'neverthrow';
-import { Row } from 'react-bootstrap';
+import { Container, Col, Row } from 'react-bootstrap';
 import { RouteComponentProps } from 'react-router';
+import Card from 'react-bootstrap/Card';
 
 import { ApiTest, apiTestLink, PageProps, resolveGETCall } from '../utils';
 
@@ -49,11 +50,43 @@ export class MediaView extends React.Component<MediaViewProps, State> {
 		return (
 			<React.Fragment>
 				<BasePage {...this.props}>
-					<Row>
-						<h1>
-							Media: {this.props.match.params.media_id}
-						</h1>
-					</Row>
+
+					<Container>
+						<Row>
+							<Col xs={6}>
+								<Card
+									className="product">
+
+									<Card.Img variant="top" src={process.env.PUBLIC_URL + "/bowl_1.jpg"} />
+
+								</Card>
+
+							</Col>
+
+							<Col xs={5} className="p2">
+								<Row>
+									<h1 className="title t">
+										bread baskets (cobalt)
+
+									</h1>
+									<h3 className="sub1">by ANTONIO LEVI</h3>
+
+									<h5 className="sub2"> Ceramic bread baskets beautifully handcrafted by Julie Kettering,
+										a Bristol based artist, finished with a cobalt glaze.</h5>
+
+									<h3 className="title s"> £130</h3>
+
+
+									<a href="something" className="button">ADD TO BASKET</a>
+								</Row>
+							</Col>
+						</Row>
+
+						<Row className="p1">
+							<Col></Col>
+							<Col></Col>
+						</Row>
+					</Container>
 
 					<Row>
 						<div>
