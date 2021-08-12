@@ -8,20 +8,20 @@ from backend.models import User, Item, ItemType, Order
 class UserAdmin(BaseUserAdmin):
 	form = UserChangeForm
 	fieldsets = (
-		(None, {'fields': ('username', 'email', 'password', 'first_name', 'last_name', 'verified')}),
+		(None, {'fields': ('username', 'email', 'password', 'first_name', 'last_name', 'verified', 'is_seller', 'profile_picture')}),
 		(_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
 		(_('Important dates'), {'fields': ('last_login', 'date_joined')}),
 		# (_('user_info'), {'fields': ('native_name', 'phone_no')}),
 	)
 	add_fieldsets = (
-		(None, {'classes': ('wide', ), 'fields': ('username', 'email', 'password1', 'password2', 'first_name', 'last_name', 'verified'), }),
+		(None, {'classes': ('wide', ), 'fields': ('username', 'email', 'password1', 'password2', 'first_name', 'last_name', 'verified', 'is_seller', 'profile_picture'), }),
 	)
 	list_display = ['username', 'email', 'first_name', 'last_name', 'is_staff', 'is_superuser', 'stripe_account_id']
 	search_fields = ('username', 'email', 'first_name', 'last_name', 'stripe_account_id')
 	ordering = ('username', 'stripe_account_id', )
 
 class ItemAdmin(admin.ModelAdmin):
-	fields = ('name', 'seller', 'bio', 'colour', 'shape', 'tag0', 'tag1', 'tag2', 'tag3', 'tag4')
+	fields = ('name', 'seller', 'bio', 'colour', 'shape', 'tag0', 'tag1', 'tag2', 'tag3', 'tag4', 'pictures')
 	ordering = ('name', 'seller', 'upload_date')
 
 class ItemTypeAdmin(admin.ModelAdmin):

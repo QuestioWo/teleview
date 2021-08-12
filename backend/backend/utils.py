@@ -54,7 +54,9 @@ def get_public_user_object(user) :
 		"location_country" : user.location_country,
 		"location_postcode" : user.location_postcode,
 		"bio" : user.bio,
-		"verified" : user.verified
+		"verified" : user.verified,
+		"is_seller" : user.is_seller,
+		"profile_picture" : user.profile_picture
 	}
 
 def get_public_item_object(item) :
@@ -69,7 +71,8 @@ def get_public_item_object(item) :
 		"tag1" : item.tag1,
 		"tag2" : item.tag2,
 		"tag3" : item.tag3,
-		"tag4" : item.tag4
+		"tag4" : item.tag4,
+		"pictures" : item.pictures
 	}
 
 def get_public_itemtype_object(itemtype) :

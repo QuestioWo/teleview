@@ -117,3 +117,7 @@
 .orders-offcanvas.order:last-of-type {
 	margin-bottom: 0.25rem;
 }
+
+.profile-picture {
+	width: 10rem;
+}

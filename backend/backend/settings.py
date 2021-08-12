@@ -113,7 +113,8 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'build')
 STATIC_DIR = os.path.join(BASE_DIR, 'build')
 STATICFILES_DIRS = [STATIC_DIR, ]
-# MEDIA_DIR = os.path.join(BASE_DIR, 'media')
+MEDIA_DIR = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = MEDIA_DIR
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
@@ -146,6 +147,7 @@ DATABASES = {
 	}
 }
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 1024 * 1024 * 10 # 10MB
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

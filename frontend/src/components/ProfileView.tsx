@@ -1,16 +1,17 @@
 import React from 'react';
 
-import { FaCheck, FaTimes, FaSpinner, FaList } from 'react-icons/fa';
+import { FaCheck, FaTimes, FaSpinner, FaList, FaTrash } from 'react-icons/fa';
 import { Result } from 'neverthrow';
 import { Button, Col, Form, InputGroup, Offcanvas, OverlayTrigger, Row, Tooltip } from 'react-bootstrap';
 import { RouteComponentProps } from 'react-router';
+import { Link } from 'react-router-dom';
 
-import { UserRESTSubmit, UserREST, UserRESTKeys, UserStripeUpdateLinkREST, UserStripeOnboardingLinkREST, Tokens, PageProps, resolveGETCall, resolvePUTCall, userStripeOnboardingLinkRESTLink, userRESTLink, userStripeUpdateLinkRESTLink, userRESTSubmitLink, OrderListREST, orderListRESTLink, getFormattedPriceString, OrderBuyerRESTSubmit, OrderREST, orderRESTSubmitLink, OrderSellerRESTSubmit, resolvePOSTCall } from '../utils';
+import config from '../config';
+import { UserRESTSubmit, UserREST, UserRESTKeys, UserStripeUpdateLinkREST, UserStripeOnboardingLinkREST, Tokens, PageProps, resolveGETCall, resolvePUTCall, userStripeOnboardingLinkRESTLink, userRESTLink, userStripeUpdateLinkRESTLink, userRESTSubmitLink, OrderListREST, orderListRESTLink, getFormattedPriceString, OrderBuyerRESTSubmit, OrderREST, orderRESTSubmitLink, OrderSellerRESTSubmit, resolvePOSTCall, mediaURL, profilePictureURL, resolveDELETECall } from '../utils';
 
 import BasePage from './elements/BasePage';
 
 import './ProfileView.css';
-import { Link } from 'react-router-dom';
 
 interface MatchParams {
 	username: string
@@ -43,7 +44,9 @@ export class ProfileView extends React.Component<ProfileViewProps, State> {
 				location_country: "",
 				location_postcode: "",
 				bio: "",
-				verified: false
+				verified: false,
+				is_seller: false,
+				profile_picture: false
 			},
 			form: {
 				first_name: "",
@@ -181,6 +184,33 @@ export class ProfileView extends React.Component<ProfileViewProps, State> {
 				console.error(err);
 			});
 		*/
+	}
+
+	handleDeleteAccount = async () => {
+		const pathOrders: string = userRESTSubmitLink + this.props.match.params.username + '/';
+		const resultOrders: Result<UserREST, Error> = await resolveDELETECall<UserREST>(pathOrders, true);
+
+		resultOrders
+			.map(res => {
+				localStorage.setItem("username", "");
+
+				const tokens: Tokens = {
+					"access": "",
+					"refresh": ""
+				};
+				localStorage.setItem("tokens", JSON.stringify(tokens));
+
+				this.props.history.push('/login');
+
+				this.props.updateAlertBar("Deleted user successfully", "success", true);
+
+				return null; // necessary to silence warning
+			})
+			.mapErr(err => {
+				this.props.updateAlertBar("Could not delete user, please try re-logging in", "danger", true);
+
+				console.error(err);
+			});
 	}
 
 	toggleOrders = async () => {
@@ -529,8 +559,8 @@ export class ProfileView extends React.Component<ProfileViewProps, State> {
 						<Col>
 							<h1 className="title">
 								{this.state.user.first_name} {this.state.user.last_name}'s Profile
-								{this.state.user.verified &&
-									<FaCheck />
+								{this.state.user.verified && this.state.user.is_seller &&
+									< FaCheck />
 								}
 							</h1>
 						</Col>
@@ -560,9 +590,17 @@ export class ProfileView extends React.Component<ProfileViewProps, State> {
 					</Row>
 
 					<Row>
+						<Col>
+							<img className="profile-picture"
+								alt="Profile Picture"
+								src={config.apiURL + mediaURL + this.props.match.params.username + "/" + profilePictureURL} />
+						</Col>
+					</Row>
+
+					<Row>
 						{this.state.isUser ?
 							<Form onSubmit={this.handleFormSubmit}>
-								<Form.Label>Bio</Form.Label>
+								<Form.Label>bio</Form.Label>
 								<InputGroup className="mb-3">
 									<Form.Control
 										required
@@ -586,7 +624,7 @@ export class ProfileView extends React.Component<ProfileViewProps, State> {
 					<Row>
 						{this.state.isUser ?
 							<Form onSubmit={this.handleFormSubmit}>
-								<Form.Label>Email</Form.Label>
+								<Form.Label>email</Form.Label>
 								<InputGroup className="mb-3">
 									<Form.Control
 										required
@@ -610,7 +648,7 @@ export class ProfileView extends React.Component<ProfileViewProps, State> {
 						<span style={{ display: "inherit" }}>
 							{this.state.isUser ?
 								<Form onSubmit={this.handleFormSubmit}>
-									<Form.Label>Town/City</Form.Label>
+									<Form.Label>town/city</Form.Label>
 									<InputGroup className="mb-3">
 										<Form.Control
 											required
@@ -631,7 +669,7 @@ export class ProfileView extends React.Component<ProfileViewProps, State> {
 							&nbsp;
 							{this.state.isUser ?
 								<Form onSubmit={this.handleFormSubmit}>
-									<Form.Label>Country</Form.Label>
+									<Form.Label>country</Form.Label>
 									<InputGroup className="mb-3">
 										<Form.Control
 											required
@@ -658,7 +696,7 @@ export class ProfileView extends React.Component<ProfileViewProps, State> {
 						<React.Fragment>
 							<Row>
 								<Form onSubmit={this.handleFormSubmit}>
-									<Form.Label>Postcode</Form.Label>
+									<Form.Label>postcode</Form.Label>
 									<InputGroup className="mb-3">
 										<Form.Control
 											required
@@ -675,7 +713,7 @@ export class ProfileView extends React.Component<ProfileViewProps, State> {
 
 							<Row>
 								<Form onSubmit={this.handleFormSubmit}>
-									<Form.Label>First Name</Form.Label>
+									<Form.Label>first name</Form.Label>
 									<InputGroup className="mb-3">
 										<Form.Control
 											required
@@ -691,7 +729,7 @@ export class ProfileView extends React.Component<ProfileViewProps, State> {
 							</Row>
 							<Row>
 								<Form onSubmit={this.handleFormSubmit}>
-									<Form.Label>Last Name</Form.Label>
+									<Form.Label>last name</Form.Label>
 									<InputGroup className="mb-3">
 										<Form.Control
 											required
@@ -708,7 +746,7 @@ export class ProfileView extends React.Component<ProfileViewProps, State> {
 							<Row>
 								{(this.state.onboarding_link !== "" && !this.state.user.verified) &&
 									<React.Fragment>
-										<Form.Label>Get Verified</Form.Label>
+										<Form.Label>get verified</Form.Label>
 										<InputGroup>
 											<a
 												target="_blank"
@@ -722,14 +760,14 @@ export class ProfileView extends React.Component<ProfileViewProps, State> {
 								}
 								{this.state.update_link !== "" &&
 									<React.Fragment>
-										<Form.Label>Update Payment Information</Form.Label>
+										<Form.Label>update payment information</Form.Label>
 										<InputGroup>
 											<a
 												target="_blank"
 												rel="noreferrer"
 												href={this.state.update_link}
 												className="stripe-connect">
-												<span>Update with</span>
+												<span>update with</span>
 											</a>
 										</InputGroup>
 									</React.Fragment>
@@ -737,6 +775,18 @@ export class ProfileView extends React.Component<ProfileViewProps, State> {
 							</Row>
 						</React.Fragment>
 					}
+					<Row>
+						<Col>
+							delete account
+						</Col>
+					</Row>
+					<Row>
+						<Col>
+							<Button className='styled-btn' onClick={this.handleDeleteAccount} variant='outline-danger'>
+								<FaTrash /> delete
+							</Button>
+						</Col>
+					</Row>
 				</BasePage>
 			</React.Fragment >
 		);

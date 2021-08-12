@@ -14,9 +14,12 @@ Including another URLconf
 	2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
+from django.conf.urls.static import static
+from django.views.static import serve
 from . import views
 from rest_framework_simplejwt.views import TokenRefreshView
+from . import settings
 
 NAMESPACE = 'api'
 
@@ -39,9 +42,9 @@ urlpatterns = [
 	path(NAMESPACE + '/is_user_verified/<str:username>/', views.UserIsVerifiedView.as_view()),
 	path(NAMESPACE + '/user/<str:username>/', views.UserChangeView.as_view()),
 	path(NAMESPACE + '/users/', views.UserListView.as_view()),
-	path(NAMESPACE + '/get_artists/', views.SellerListView.as_view()),
+	path(NAMESPACE + '/featured_users/', views.UserFeaturedListView.as_view()),
 
-	path(NAMESPACE + '/get_items/', views.ItemListView.as_view()),
+	path(NAMESPACE + '/browse/', views.BrowseView.as_view()),
 	path(NAMESPACE + '/get_items/<str:username>/', views.ItemsGetView.as_view()),
 	path(NAMESPACE + '/get_items/<str:username>/<str:name>/', views.ItemSpecificGetView.as_view()),
 	path(NAMESPACE + '/items/<str:username>/<str:name>/', views.ItemSpecificChangeView.as_view()),
@@ -59,4 +62,6 @@ urlpatterns = [
 	path(NAMESPACE + '/order/<int:order_id>/', views.OrderSpecificChangeView.as_view()),
 
 	path(NAMESPACE + '/stripe_webhook/', views.StripePaymentIntentWebhookView.as_view()),
-] # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+	re_path(r'^api/media/(?P<path>.*)$', serve, kwargs={'document_root': settings.MEDIA_ROOT})
+]
