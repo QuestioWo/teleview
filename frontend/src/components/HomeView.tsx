@@ -49,7 +49,7 @@ export class HomeView extends React.Component<HomeViewProps, State> {
 						</h2>
 					</Row>
 
-					<Row className="content">
+					{/* <Row className="content">
 
 						<Col>
 							<h1 className="title">
@@ -66,7 +66,7 @@ export class HomeView extends React.Component<HomeViewProps, State> {
 						<h1>
 							Home
 						</h1>
-					</Row>
+					</Row> */}
 
 				</BasePage>
 			</React.Fragment>
