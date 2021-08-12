@@ -66,14 +66,14 @@ export default class NavBar extends React.PureComponent<Props, State> {
 										activeClassName='nav-link active nav-right-side'
 										to={{ pathname: '/profile/' + localStorage.username }}>
 										Profile
-										</NavLink>
+									</NavLink>
 									:
 									<NavLink
 										className='nav-link nav-right-side'
 										activeClassName='nav-link active nav-right-side'
 										to={{ pathname: '/login' }}>
 										Login
-										</NavLink>
+									</NavLink>
 								}
 							</Nav.Item>
 
@@ -99,7 +99,7 @@ export default class NavBar extends React.PureComponent<Props, State> {
 						</Nav>
 					</Navbar.Collapse>
 				</Navbar>
-			</React.Fragment>
+			</React.Fragment >
 		)
 	}
 }
