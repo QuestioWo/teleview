@@ -1,10 +1,14 @@
 import React from 'react';
 
+<<<<<<< HEAD
 import { Result } from 'neverthrow';
 import { Container, Col, Row } from 'react-bootstrap';
+=======
+import { Row, Container, Col } from 'react-bootstrap';
+>>>>>>> 9ba1425b0a990e553b8e2d78eaaf3193d42a373b
 import { RouteComponentProps } from 'react-router';
 
-import { ApiTest, apiTestLink, PageProps, resolveGETCall } from '../utils';
+import { PageProps } from '../utils';
 
 import BasePage from './elements/BasePage';
 import LoginForm from './elements/CredentialForm';
@@ -13,35 +17,9 @@ import './LoginView.css';
 
 export interface LoginViewProps extends RouteComponentProps, PageProps { }
 
-interface State {
-	apiValue: ApiTest
-}
+interface State { }
 
 export class LoginView extends React.Component<LoginViewProps, State> {
-	constructor(props: LoginViewProps) {
-		super(props);
-
-		this.state = {
-			apiValue: {
-				blah: ""
-			}
-		};
-	}
-
-	async componentDidMount() {
-		const result: Result<ApiTest, Error> = await resolveGETCall<ApiTest>(apiTestLink);
-
-		result
-			.map(res => {
-				this.setState({ apiValue: res });
-
-				return null; // necessary to silence warning
-			})
-			.mapErr(err => {
-				console.error(err);
-			});
-	}
-
 	render() {
 		return (
 			<React.Fragment>
@@ -53,14 +31,8 @@ export class LoginView extends React.Component<LoginViewProps, State> {
 							<Col xs={6}>
 								<Row>
 									<h1 className="title">
-										Login
+										login
 									</h1>
-								</Row>
-
-								<Row>
-									<div>
-										{this.state.apiValue.blah}
-									</div>
 								</Row>
 
 								<Row>
@@ -71,10 +43,40 @@ export class LoginView extends React.Component<LoginViewProps, State> {
 							<Col></Col>
 
 						</Row>
-					</Container >
 
-				</BasePage>
-			</React.Fragment>
-		);
+						render() {
+		return (
+						<React.Fragment>
+							<BasePage {...this.props}>
+								<Container>
+									<Row>
+										<Col></Col>
+
+										<Col xs={6}>
+											<Row>
+												<h1 className="title">
+													Login
+												</h1>
+											</Row>
+
+											<Row>
+												<div>
+													{this.state.apiValue.blah}
+												</div>
+											</Row>
+
+											<Row>
+												<LoginForm {...this.props} />
+											</Row>
+										</Col>
+
+										<Col></Col>
+
+									</Row>
+								</Container >
+
+							</BasePage>
+						</React.Fragment>
+						);
 	}
 }

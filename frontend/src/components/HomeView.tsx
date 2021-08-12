@@ -1,13 +1,11 @@
 import React from 'react';
 
-import { Result } from 'neverthrow';
-import { Row } from 'react-bootstrap';
-import { Col } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import { RouteComponentProps } from 'react-router';
 import Carousel from 'react-bootstrap/Carousel';
 import { Link } from 'react-router-dom';
 
-import { ApiTest, apiTestLink, PageProps, resolveGETCall } from '../utils';
+import { PageProps } from '../utils';
 
 import BasePage from './elements/BasePage';
 
@@ -15,22 +13,18 @@ import './HomeView.css';
 
 export interface HomeViewProps extends RouteComponentProps, PageProps { }
 
-interface State {
-	apiValue: ApiTest
-}
+interface State { }
 
 export class HomeView extends React.Component<HomeViewProps, State> {
-	constructor(props: HomeViewProps) {
-		super(props);
+	// constructor(props: HomeViewProps) {
+	// 	super(props);
 
-		this.state = {
-			apiValue: {
-				blah: ""
-			}
-		};
-	}
+	// 	this.state = {
+	// 	};
+	// }
 
 	async componentDidMount() {
+		/*
 		const result: Result<ApiTest, Error> = await resolveGETCall<ApiTest>(apiTestLink);
 
 		result
@@ -42,6 +36,7 @@ export class HomeView extends React.Component<HomeViewProps, State> {
 			.mapErr(err => {
 				console.error(err);
 			});
+			*/
 	}
 
 
