@@ -90,7 +90,7 @@ class RegisterView(APIView):
 			user_media_root = MEDIA_ROOT + "/" + req['username'].lower()
 			if not os.path.exists(user_media_root):
 				os.mkdir(user_media_root)
-				
+
 			with open(user_media_root + "/profile.png" , "wb") as f :
 				f.write(profile_picture)
 
@@ -541,7 +541,7 @@ class ItemsGetView(APIView):
 			items = Item.objects.filter(seller=user).order_by('-upload_date')
 			l = []
 			for item in items:
-				l.append(get_public_item_object(item))
+				l.append(get_public_item_object(item, []))
 
 			return Response(l, status=STATUS_CODE_2xx.SUCCESS.value)
 		except Exception :
@@ -553,8 +553,10 @@ class ItemSpecificGetView(APIView):
 		try :
 			user = User.objects.get(username=username)
 			item = Item.objects.get(seller=user, name=name)
+
+			item_types = ItemType.objects.filter(item=item)
 			
-			return Response(get_public_item_object(item), status=STATUS_CODE_2xx.SUCCESS.value)
+			return Response(get_public_item_object(item, item_types), status=STATUS_CODE_2xx.SUCCESS.value)
 		
 		except Exception :
 			traceback.print_exc()
@@ -585,7 +587,7 @@ class ItemSpecificChangeView(APIView):
 			item.save()
 			
 			item = Item.objects.get(seller=username, name=name)
-			return Response(get_public_item_object(item), status=STATUS_CODE_2xx.ACCEPTED.value)
+			return Response(get_public_item_object(item, []), status=STATUS_CODE_2xx.ACCEPTED.value)
 		
 		except Exception :
 			traceback.print_exc()
@@ -608,10 +610,23 @@ class ItemSpecificChangeView(APIView):
 				item.tag3 = req["tag3"]
 				item.tag4 = req["tag4"]
 
+				for i, pic in enumerate(req["pictures"]) :
+					removed_header = pic.partition(",")[2]
+					picture = base64.b64decode(removed_header)
+
+					item_media_root = MEDIA_ROOT + "/" + username.lower() + "/" + name
+					if not os.path.exists(item_media_root):
+						os.mkdir(item_media_root)
+						
+					with open(item_media_root + "/" + str(i) + ".png" , "wb") as f :
+						f.write(picture)
+
+				item.pictures = len(req["pictures"])
+
 				item.save()
 
 				item = Item.objects.get(seller=username, name=name)
-				return Response(get_public_item_object(item), status=STATUS_CODE_2xx.ACCEPTED.value)
+				return Response(get_public_item_object(item, []), status=STATUS_CODE_2xx.ACCEPTED.value)
 			else :
 				return Response({}, status=STATUS_CODE_4xx.BAD_REQUEST.value)
 

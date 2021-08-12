@@ -59,7 +59,7 @@ def get_public_user_object(user) :
 		"profile_picture" : user.profile_picture
 	}
 
-def get_public_item_object(item) :
+def get_public_item_object(item, item_types) :
 	return {
 		"name" : item.name,
 		"bio" : item.bio,
@@ -72,7 +72,8 @@ def get_public_item_object(item) :
 		"tag2" : item.tag2,
 		"tag3" : item.tag3,
 		"tag4" : item.tag4,
-		"pictures" : item.pictures
+		"pictures" : item.pictures,
+		"item_types": [i.id for i in item_types]
 	}
 
 def get_public_itemtype_object(itemtype) :

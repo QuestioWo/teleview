@@ -93,6 +93,20 @@ export interface UserRESTSubmit {
 	bio: string
 }
 
+export interface ItemSubmitREST {
+	bio: string
+	shape: string,
+	colour: string,
+	tag0: string,
+	tag1: string,
+	tag2: string,
+	tag3: string,
+	tag4: string,
+	pictures: string[]
+}
+export const itemSubmitRESTLink: string = '/items/';
+export const itemRESTLink: string = '/get_items/';
+
 interface RefreshTokensRESTSubmit {
 	refresh: string
 }
@@ -113,7 +127,8 @@ export interface ItemREST {
 	tag2: string,
 	tag3: string,
 	tag4: string,
-	pictures: number
+	pictures: number,
+	item_types: ItemTypeREST[]
 }
 export const itemsListRESTLink: string = '/get_items/';
 export type ItemRESTList = ItemREST[];
@@ -134,6 +149,7 @@ export type ItemColours = "yellow" | "black" | "silver";
 export type ItemShapes = "shirt" | "jewelery" | "skirt";
 export type ItemStyles = "" | "kitsch" | "modern" | "pastel" | "vibey" | "deadstock";
 
+export const itemTypeRESTNewSubmitLink = "/item_types/";
 export interface ItemTypeRESTNewSubmit {
 	price: number,
 	quantity: number,

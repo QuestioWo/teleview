@@ -1,17 +1,18 @@
 import React from 'react';
 
-import { FaCheck, FaTimes, FaSpinner, FaList, FaTrash } from 'react-icons/fa';
+import { FaCheck, FaTimes, FaSpinner, FaList, FaTrash, FaPlus } from 'react-icons/fa';
 import { Result } from 'neverthrow';
 import { Button, Col, Form, InputGroup, Offcanvas, OverlayTrigger, Row, Tooltip } from 'react-bootstrap';
 import { RouteComponentProps } from 'react-router';
 import { Link } from 'react-router-dom';
 
 import config from '../config';
-import { UserRESTSubmit, UserREST, UserRESTKeys, UserStripeUpdateLinkREST, UserStripeOnboardingLinkREST, Tokens, PageProps, resolveGETCall, resolvePUTCall, userStripeOnboardingLinkRESTLink, userRESTLink, userStripeUpdateLinkRESTLink, userRESTSubmitLink, OrderListREST, orderListRESTLink, getFormattedPriceString, OrderBuyerRESTSubmit, OrderREST, orderRESTSubmitLink, OrderSellerRESTSubmit, resolvePOSTCall, mediaURL, profilePictureURL, resolveDELETECall } from '../utils';
+import { UserRESTSubmit, UserREST, UserRESTKeys, UserStripeUpdateLinkREST, UserStripeOnboardingLinkREST, Tokens, PageProps, resolveGETCall, resolvePUTCall, userStripeOnboardingLinkRESTLink, userRESTLink, userStripeUpdateLinkRESTLink, userRESTSubmitLink, OrderListREST, orderListRESTLink, getFormattedPriceString, OrderBuyerRESTSubmit, OrderREST, orderRESTSubmitLink, OrderSellerRESTSubmit, resolvePOSTCall, mediaURL, profilePictureURL, resolveDELETECall, itemsListRESTLink, ItemRESTList } from '../utils';
 
 import BasePage from './elements/BasePage';
 
 import './ProfileView.css';
+import { LinkContainer } from 'react-router-bootstrap';
 
 interface MatchParams {
 	username: string
@@ -28,7 +29,8 @@ interface State {
 	update_link: string,
 	orders: OrderListREST,
 	ordersForm: OrderListREST,
-	showOrders: boolean
+	showOrders: boolean,
+	items: ItemRESTList
 }
 
 export class ProfileView extends React.Component<ProfileViewProps, State> {
@@ -63,11 +65,26 @@ export class ProfileView extends React.Component<ProfileViewProps, State> {
 			update_link: "",
 			orders: [],
 			ordersForm: [],
-			showOrders: false
+			showOrders: false,
+			items: []
 		};
 	}
 
 	async componentDidMount() {
+		const pathItems: string = itemsListRESTLink + this.props.match.params.username + '/';
+		const resultItem: Result<ItemRESTList, Error> = await resolveGETCall<ItemRESTList>(pathItems);
+
+		resultItem
+			.map(res => {
+				this.setState({ items: res });
+
+				return null; // necessary to silence warning
+			})
+			.mapErr(err => {
+				this.props.updateAlertBar("Cannot recieve items", "warning", true);
+				console.error(err);
+			});
+
 		const path: string = userRESTLink + this.props.match.params.username + '/';
 		const result: Result<UserREST, Error> = await resolveGETCall<UserREST>(path);
 
@@ -277,6 +294,8 @@ export class ProfileView extends React.Component<ProfileViewProps, State> {
 			"refresh": ""
 		};
 		localStorage.setItem("tokens", JSON.stringify(tokens));
+
+		localStorage.setItem("basket", JSON.stringify([]));
 
 		this.props.history.go(0);
 	}
@@ -574,9 +593,15 @@ export class ProfileView extends React.Component<ProfileViewProps, State> {
 								{this.state.isUser &&
 									<React.Fragment>
 										{' '}
+										<LinkContainer to={'/checkout'}>
+											<Button className="styled-btn" variant='outline-success'>
+												checkout basket
+											</Button>
+										</LinkContainer>
+										{' '}
 										<Button className="styled-btn" onClick={this.handleLogOut} variant='outline-danger'>
 											log out
-								</Button>
+										</Button>
 									</React.Fragment>
 								}
 							</div>
@@ -591,8 +616,7 @@ export class ProfileView extends React.Component<ProfileViewProps, State> {
 
 					<Row>
 						<Col>
-							<img className="profile-picture"
-								alt="Profile Picture"
+							<img className="profile-picture" alt=""
 								src={config.apiURL + mediaURL + this.props.match.params.username + "/" + profilePictureURL} />
 						</Col>
 					</Row>
@@ -773,18 +797,52 @@ export class ProfileView extends React.Component<ProfileViewProps, State> {
 									</React.Fragment>
 								}
 							</Row>
+							<Row>
+								<Col>
+									delete account
+							</Col>
+							</Row>
+							<Row>
+								<Col>
+									<Button className='styled-btn' onClick={this.handleDeleteAccount} variant='outline-danger'>
+										<FaTrash /> delete
+								</Button>
+								</Col>
+							</Row>
 						</React.Fragment>
 					}
-					<Row>
-						<Col>
-							delete account
+
+					<Row style={{ marginTop: '2rem' }}>
+						< Col >
+							<h3 className="title">
+								items
+							</h3>
 						</Col>
+						{this.state.isUser &&
+							<Col>
+								<LinkContainer to='/new_item/' style={{ float: 'right' }} >
+									<Button variant='outline-secondary'>
+										<FaPlus />add an item
+									</Button>
+								</LinkContainer>
+							</Col>
+						}
 					</Row>
 					<Row>
 						<Col>
-							<Button className='styled-btn' onClick={this.handleDeleteAccount} variant='outline-danger'>
-								<FaTrash /> delete
-							</Button>
+							{this.state.items.map(item => {
+								return (
+									<React.Fragment>
+										<Col>
+											<Link to={'/item/' + this.props.match.params.username + "/" + item.name}>
+												{item.name}
+											</Link>
+										</Col>
+									</React.Fragment>
+								)
+							})
+
+							}
 						</Col>
 					</Row>
 				</BasePage>
