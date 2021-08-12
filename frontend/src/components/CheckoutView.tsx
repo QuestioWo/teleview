@@ -71,7 +71,7 @@ export class CheckoutView extends React.Component<CheckoutViewProps, State> {
 												<Row>
 													<Col>
 														<h3>
-															{item.name}
+															{item.name} - {item.available ? "currently available" : "unavailable"}
 														</h3>
 													</Col>
 													<Col>

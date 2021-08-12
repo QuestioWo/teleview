@@ -6,10 +6,12 @@ from datetime import datetime, date
 class User(AbstractUser):
 	username = models.CharField(max_length=128, unique=True, primary_key=True, db_index=True)
 	email = models.EmailField(_('email address'))
+	is_seller = models.BooleanField(default=False)
+	is_featured = models.BooleanField(default=False)
 	location_town = models.CharField(max_length=128, default="")
 	location_country = models.CharField(max_length=64, default="")
 	location_postcode = models.CharField(max_length=8, default="")
-	# profile_picture : static stub
+	profile_picture = models.BooleanField(default=False) # if there is a profile picture
 	bio = models.CharField(max_length=256, default="")
 	verified = models.BooleanField(default=False)
 	stripe_account_id = models.CharField(max_length=128, default='')
@@ -25,7 +27,8 @@ class Item(models.Model):
 	seller = models.ForeignKey(User, on_delete=models.CASCADE)
 	bio = models.CharField(max_length=256)
 	upload_date = models.DateTimeField(auto_now_add=True)
-	# pictures : Set of strings/static stubs
+	is_featured = models.BooleanField(default=False)
+	pictures = models.IntegerField(default=0) # how many pictures there are 
 	shape = models.CharField(max_length=32)
 	colour = models.CharField(max_length=32)
 

@@ -128,6 +128,15 @@ exports[`ProfileView Should render correctly with mount 1`] = `
             </Row>
             <Row>
               <div className=\\"row\\">
+                <Col>
+                  <div className=\\"col\\">
+                    <img className=\\"profile-picture\\" alt=\\"\\" src=\\"http://localhost:8000/api/media/foo/profile.png\\" />
+                  </div>
+                </Col>
+              </div>
+            </Row>
+            <Row>
+              <div className=\\"row\\">
                 <div />
               </div>
             </Row>
@@ -145,6 +154,24 @@ exports[`ProfileView Should render correctly with mount 1`] = `
                    
                   <div />
                 </span>
+              </div>
+            </Row>
+            <Row style={{...}}>
+              <div style={{...}} className=\\"row\\">
+                <Col>
+                  <div className=\\"col\\">
+                    <h3 className=\\"title\\">
+                      items
+                    </h3>
+                  </div>
+                </Col>
+              </div>
+            </Row>
+            <Row>
+              <div className=\\"row\\">
+                <Col>
+                  <div className=\\"col\\" />
+                </Col>
               </div>
             </Row>
           </div>
@@ -214,6 +241,11 @@ exports[`ProfileView Should render correctly with shallow 1`] = `
       </div>
     </Row>
     <Row>
+      <Col>
+        <img className=\\"profile-picture\\" alt=\\"\\" src=\\"http://localhost:8000/api/media/foo/profile.png\\" />
+      </Col>
+    </Row>
+    <Row>
       <div />
     </Row>
     <Row>
@@ -227,6 +259,16 @@ exports[`ProfileView Should render correctly with shallow 1`] = `
          
         <div />
       </span>
+    </Row>
+    <Row style={{...}}>
+      <Col>
+        <h3 className=\\"title\\">
+          items
+        </h3>
+      </Col>
+    </Row>
+    <Row>
+      <Col />
     </Row>
   </BasePage>
 </Fragment>"

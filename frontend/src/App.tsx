@@ -15,6 +15,7 @@ import { RefreshUpdateStripeView } from './components/RefreshUpdateStripeView';
 import { VerifyProfileView } from './components/VerifyProfileView';
 import { SupportView } from './components/SupportView';
 import { EthicsView } from './components/EthicsView';
+import { NewItemView } from './components/NewItemView';
 
 import { AlertBarUpdater, BasketItem, ItemREST, ItemTypeAvailableREST, itemTypeAvailableRESTLink, ItemTypeREST, PageProps, resolveGETCall, Tokens } from './utils';
 import config from './config';
@@ -167,7 +168,8 @@ export default class App extends React.Component<Props, State> {
 						<Route exact path="/" render={(props) => <HomeView {...props} {...this.state} />} />
 						<Route exact path="/login" render={(props) => <LoginView {...props} {...this.state} />} />
 						<Route exact path="/browse/" render={(props) => <BrowseView {...props} {...this.state} />} />
-						<Route exact path="/item/:item_id" render={(props) => <ItemView key={Date.now()} {...props} {...this.state} />} />
+						<Route exact path="/item/:username/:name" render={(props) => <ItemView key={Date.now()} {...props} {...this.state} />} />
+						<Route exact path="/new_item/" render={(props) => <NewItemView {...props} {...this.state} />} />
 
 						<Route path="/profile/:username" render={(props) => <ProfileView key={Date.now()} {...props} {...this.state} />} />
 						<Route path="/refresh_stripe_update_link/:username" render={(props) => <RefreshUpdateStripeView {...props} {...this.state} />} />

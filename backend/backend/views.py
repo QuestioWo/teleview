@@ -2,14 +2,19 @@ import json
 import pycountry
 import traceback
 import stripe
+import base64
+import os
 
 from django.shortcuts import render
 from django.contrib.auth import authenticate
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import generics
 
 from backend.models import User, Item, ItemType, Order
 from backend.utils import (
@@ -26,7 +31,8 @@ from backend.utils import (
 from backend.settings import (
 	DEPLOYMENT_LINK,
 	STRIPE_SECRET_KEY,
-	STRIPE_SECRET_WEBHOOK_KEY
+	STRIPE_SECRET_WEBHOOK_KEY,
+	MEDIA_ROOT
 )
 
 stripe.api_key = STRIPE_SECRET_KEY
@@ -51,10 +57,16 @@ class RegisterView(APIView):
 		try :
 			req = json.loads(request.body.decode('utf-8'))
 			
+			country = pycountry.countries.get(name=req['location_country'].title())
+			if country != None:
+				country_code = country.alpha_2
+			else :
+				country_code = pycountry.countries.get(name="United Kingdom").alpha_2
+
 			accountResponse = stripe.Account.create(
 				type="standard",
 				default_currency='GBP',
-				country=pycountry.countries.get(name=req['location_country'].title()).alpha_2,
+				country=country_code,
 				email=req['email'].lower(),
 			)
 
@@ -70,8 +82,18 @@ class RegisterView(APIView):
 				stripe_account_id=accountResponse.id
 			)
 
-			ret_user = User.objects.get(username=req['username'])
+			ret_user = User.objects.get(username=req['username'].lower())
 			
+			removed_header = req['profile_picture'].partition(",")[2]
+			profile_picture = base64.b64decode(removed_header)
+
+			user_media_root = MEDIA_ROOT + "/" + req['username'].lower()
+			if not os.path.exists(user_media_root):
+				os.mkdir(user_media_root)
+
+			with open(user_media_root + "/profile.png" , "wb") as f :
+				f.write(profile_picture)
+
 			tokens = get_tokens_for_user(ret_user)
 
 			return Response({
@@ -199,6 +221,7 @@ class UserVerifyView(APIView) :
 				return Response({"verified" : False}, status=STATUS_CODE_4xx.UNAUTHORIZED.value)
 
 			user.verified = True
+			user.is_seller = True
 
 			user.save()
 
@@ -233,7 +256,7 @@ class PaymentIntentView(APIView) :
 					seller = User.objects.get(username=req_item["seller_name"])
 					item_type = ItemType.objects.get(id=req_item["type_id"])
 					
-					if not seller.verified :
+					if not seller.is_seller and seller.verified :
 						print("Seller cannot sell")
 						return Response({}, status=STATUS_CODE_4xx.FORBIDDEN.value)
 
@@ -518,7 +541,7 @@ class ItemsGetView(APIView):
 			items = Item.objects.filter(seller=user).order_by('-upload_date')
 			l = []
 			for item in items:
-				l.append(get_public_item_object(item))
+				l.append(get_public_item_object(item, []))
 
 			return Response(l, status=STATUS_CODE_2xx.SUCCESS.value)
 		except Exception :
@@ -530,8 +553,10 @@ class ItemSpecificGetView(APIView):
 		try :
 			user = User.objects.get(username=username)
 			item = Item.objects.get(seller=user, name=name)
+
+			item_types = ItemType.objects.filter(item=item)
 			
-			return Response(get_public_item_object(item), status=STATUS_CODE_2xx.SUCCESS.value)
+			return Response(get_public_item_object(item, item_types), status=STATUS_CODE_2xx.SUCCESS.value)
 		
 		except Exception :
 			traceback.print_exc()
@@ -562,7 +587,7 @@ class ItemSpecificChangeView(APIView):
 			item.save()
 			
 			item = Item.objects.get(seller=username, name=name)
-			return Response(get_public_item_object(item), status=STATUS_CODE_2xx.ACCEPTED.value)
+			return Response(get_public_item_object(item, []), status=STATUS_CODE_2xx.ACCEPTED.value)
 		
 		except Exception :
 			traceback.print_exc()
@@ -585,10 +610,23 @@ class ItemSpecificChangeView(APIView):
 				item.tag3 = req["tag3"]
 				item.tag4 = req["tag4"]
 
+				for i, pic in enumerate(req["pictures"]) :
+					removed_header = pic.partition(",")[2]
+					picture = base64.b64decode(removed_header)
+
+					item_media_root = MEDIA_ROOT + "/" + username.lower() + "/" + name
+					if not os.path.exists(item_media_root):
+						os.mkdir(item_media_root)
+						
+					with open(item_media_root + "/" + str(i) + ".png" , "wb") as f :
+						f.write(picture)
+
+				item.pictures = len(req["pictures"])
+
 				item.save()
 
 				item = Item.objects.get(seller=username, name=name)
-				return Response(get_public_item_object(item), status=STATUS_CODE_2xx.ACCEPTED.value)
+				return Response(get_public_item_object(item, []), status=STATUS_CODE_2xx.ACCEPTED.value)
 			else :
 				return Response({}, status=STATUS_CODE_4xx.BAD_REQUEST.value)
 
@@ -745,15 +783,27 @@ class UserListView(APIView):
 		l = User.objects.all()
 		users = []
 		for u in l:
-			users.append(get_public_user_object(u))
+			if u.is_seller :
+				users.append(get_public_user_object(u))
 
 		return Response(users, status=STATUS_CODE_2xx.SUCCESS.value)
 
-# class RolesListView(APIView):
-# 	def get(self, request):
-# 		l = Role.objects.all()
-# 		roles = []
-# 		for r in l:
-# 			roles.append(get_public_role_object(r))
+class UserFeaturedListView(APIView) :
+	def get(self, request) :
+		l = User.objects.all()
+		users = []
+		for u in l:
+			if u.is_seller and u.is_featured :
+				users.append(get_public_user_object(u))
 
-# 		return Response(roles, status=STATUS_CODE_2xx.SUCCESS.value)
+		return Response(users, status=STATUS_CODE_2xx.SUCCESS.value)
+
+class BrowseView(APIView):
+	def get(self, request):
+		try:
+			items = Item.objects.all()
+
+			return Response([get_public_item_object(item, []) for item in items], status=STATUS_CODE_2xx.SUCCESS.value)
+		except Exception :
+			traceback.print_exc()
+			return Response([], status=STATUS_CODE_4xx.BAD_REQUEST.value)

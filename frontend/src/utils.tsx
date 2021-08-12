@@ -4,6 +4,9 @@ import { Stripe } from '@stripe/stripe-js';
 
 import config from './config';
 
+export const mediaURL: string = "/media/";
+export const profilePictureURL: string = "profile.png";
+
 export const apiTestLink: string = '/';
 export interface ApiTest {
 	blah: string
@@ -51,6 +54,7 @@ export interface TokenREST {
 }
 
 export const userRESTLink: string = '/get_user/';
+export const userListRESTLink: string = '/users/';
 export interface UserREST {
 	first_name: string,
 	last_name: string,
@@ -59,8 +63,11 @@ export interface UserREST {
 	location_country: string,
 	location_postcode: string,
 	bio: string,
-	verified: boolean
+	verified: boolean,
+	is_seller: boolean,
+	profile_picture: boolean
 }
+export type UserListREST = UserREST[];
 export type UserRESTKeys = "email" | "first_name" | "last_name" | "location_town" | "location_country" | "location_postcode" | "bio";
 
 export interface RegistrationRESTSubmit {
@@ -72,6 +79,7 @@ export interface RegistrationRESTSubmit {
 	location_town: string,
 	location_country: string,
 	location_postcode: string,
+	profile_picture: string
 }
 
 export const userRESTSubmitLink: string = '/user/';
@@ -84,6 +92,20 @@ export interface UserRESTSubmit {
 	location_postcode: string,
 	bio: string
 }
+
+export interface ItemSubmitREST {
+	bio: string
+	shape: string,
+	colour: string,
+	tag0: string,
+	tag1: string,
+	tag2: string,
+	tag3: string,
+	tag4: string,
+	pictures: string[]
+}
+export const itemSubmitRESTLink: string = '/items/';
+export const itemRESTLink: string = '/get_items/';
 
 interface RefreshTokensRESTSubmit {
 	refresh: string
@@ -104,7 +126,9 @@ export interface ItemREST {
 	tag1: string,
 	tag2: string,
 	tag3: string,
-	tag4: string
+	tag4: string,
+	pictures: number,
+	item_types: ItemTypeREST[]
 }
 export const itemsListRESTLink: string = '/get_items/';
 export type ItemRESTList = ItemREST[];
@@ -125,6 +149,7 @@ export type ItemColours = "yellow" | "black" | "silver";
 export type ItemShapes = "shirt" | "jewelery" | "skirt";
 export type ItemStyles = "" | "kitsch" | "modern" | "pastel" | "vibey" | "deadstock";
 
+export const itemTypeRESTNewSubmitLink = "/item_types/";
 export interface ItemTypeRESTNewSubmit {
 	price: number,
 	quantity: number,

@@ -11,7 +11,7 @@ import './CredentialForm.css';
 interface Props extends RouteComponentProps, PageProps { }
 
 interface State extends RegistrationRESTSubmit {
-	register: boolean
+	register: boolean,
 }
 
 export default class LoginForm extends React.PureComponent<Props, State> {
@@ -27,7 +27,8 @@ export default class LoginForm extends React.PureComponent<Props, State> {
 			email: "",
 			location_town: "",
 			location_country: "",
-			location_postcode: ""
+			location_postcode: "",
+			profile_picture: ""
 		};
 	}
 
@@ -42,7 +43,8 @@ export default class LoginForm extends React.PureComponent<Props, State> {
 			email: this.state.email,
 			location_town: this.state.location_town,
 			location_country: this.state.location_country,
-			location_postcode: this.state.location_postcode
+			location_postcode: this.state.location_postcode,
+			profile_picture: this.state.profile_picture
 		};
 
 		const path = this.state.register ? registrationRESTLink : loginRESTLink;
@@ -70,12 +72,26 @@ export default class LoginForm extends React.PureComponent<Props, State> {
 			});
 	}
 
+	handleProfilePictureChange = async (event: any) => {
+		const reader = new FileReader();
+		reader.onload = () => {
+			var settingString;
+			if (reader.result === null || reader.result instanceof ArrayBuffer) {
+				settingString = "";
+			} else {
+				settingString = reader.result;
+			}
+			this.setState({ profile_picture: settingString });
+		};
+		reader.readAsDataURL(event.target.files[0]);
+	}
+
 	render() {
 		return (
 			<React.Fragment>
 				<Form onSubmit={this.handlSubmitLogin}>
 					<Form.Group className="mb-3" controlId="username">
-						<Form.Label>Username</Form.Label>
+						<Form.Label>username</Form.Label>
 						<Form.Control
 							required
 							type="text"
@@ -85,7 +101,7 @@ export default class LoginForm extends React.PureComponent<Props, State> {
 					</Form.Group>
 
 					<Form.Group className="mb-3" controlId="password">
-						<Form.Label>Password</Form.Label>
+						<Form.Label>password</Form.Label>
 						<Form.Control
 							required
 							type="password"
@@ -97,7 +113,7 @@ export default class LoginForm extends React.PureComponent<Props, State> {
 					{this.state.register &&
 						<React.Fragment>
 							<Form.Group className="mb-3" controlId="first_name">
-								<Form.Label>First Name</Form.Label>
+								<Form.Label>first name</Form.Label>
 								<Form.Control
 									required
 									type="text"
@@ -107,7 +123,7 @@ export default class LoginForm extends React.PureComponent<Props, State> {
 							</Form.Group>
 
 							<Form.Group className="mb-3" controlId="last_name">
-								<Form.Label>Last Name</Form.Label>
+								<Form.Label>last name</Form.Label>
 								<Form.Control
 									required
 									type="text"
@@ -117,7 +133,7 @@ export default class LoginForm extends React.PureComponent<Props, State> {
 							</Form.Group>
 
 							<Form.Group className="mb-3" controlId="email">
-								<Form.Label>Email</Form.Label>
+								<Form.Label>email</Form.Label>
 								<Form.Control
 									required
 									type="email"
@@ -127,7 +143,7 @@ export default class LoginForm extends React.PureComponent<Props, State> {
 							</Form.Group>
 
 							<Form.Group className="mb-3" controlId="location_town">
-								<Form.Label>Town/City</Form.Label>
+								<Form.Label>town/city</Form.Label>
 								<Form.Control
 									required
 									type="text"
@@ -137,7 +153,7 @@ export default class LoginForm extends React.PureComponent<Props, State> {
 							</Form.Group>
 
 							<Form.Group className="mb-3" controlId="location_country">
-								<Form.Label>Country</Form.Label>
+								<Form.Label>country</Form.Label>
 								<Form.Control
 									required
 									type="text"
@@ -147,13 +163,22 @@ export default class LoginForm extends React.PureComponent<Props, State> {
 							</Form.Group>
 
 							<Form.Group className="mb-3" controlId="location_postcode">
-								<Form.Label>Postcode</Form.Label>
+								<Form.Label>postcode</Form.Label>
 								<Form.Control
 									required
 									type="text"
 									placeholder="L12 7HJ"
 									value={this.state.location_postcode}
 									onChange={async (event: React.ChangeEvent<HTMLInputElement>) => { this.setState({ location_postcode: event.target.value }) }} />
+							</Form.Group>
+
+							<Form.Group className="mb-3" controlId="profile_picture">
+								<Form.Label>profile picture (.png 10Mb max)</Form.Label>
+								<Form.Control
+									required
+									type="file"
+									accept={'.png'}
+									onChange={this.handleProfilePictureChange} />
 							</Form.Group>
 						</React.Fragment>
 					}

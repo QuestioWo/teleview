@@ -1,19 +1,20 @@
 import React from 'react';
 
 import { Result } from 'neverthrow';
-import { Row } from 'react-bootstrap';
+import { Card, Col, Row } from 'react-bootstrap';
 import { RouteComponentProps } from 'react-router';
 
-import { ApiTest, apiTestLink, PageProps, resolveGETCall } from '../utils';
+import { ItemRESTList, mediaURL, PageProps, resolveGETCall } from '../utils';
 
 import BasePage from './elements/BasePage';
 
 import './BrowseView.css';
+import config from '../config';
 
 export interface BrowseViewProps extends RouteComponentProps, PageProps { }
 
 interface State {
-	apiValue: ApiTest
+	items: ItemRESTList;
 }
 
 export class BrowseView extends React.Component<BrowseViewProps, State> {
@@ -21,18 +22,16 @@ export class BrowseView extends React.Component<BrowseViewProps, State> {
 		super(props);
 
 		this.state = {
-			apiValue: {
-				blah: ""
-			}
+			items: []
 		};
 	}
 
 	async componentDidMount() {
-		const result: Result<ApiTest, Error> = await resolveGETCall<ApiTest>(apiTestLink);
+		const result: Result<ItemRESTList, Error> = await resolveGETCall<ItemRESTList>('/browse/');
 
 		result
 			.map(res => {
-				this.setState({ apiValue: res });
+				this.setState({ items: res });
 
 				return null; // necessary to silence warning
 			})
@@ -52,12 +51,31 @@ export class BrowseView extends React.Component<BrowseViewProps, State> {
 					</Row>
 
 					<Row>
-						<div>
-							{this.state.apiValue.blah}
-						</div>
+						<Col xs={11}>
+
+							<Row className="browse">
+								{this.state.items.map(item => {
+									return (
+										<React.Fragment>
+
+
+											<Card className="product">
+
+												<Card.Img variant="top" src={config.apiURL + mediaURL + item.seller_name + "/" + item.name + "/0.png"} className='item-image' />
+												<Card.Body>
+													<Card.Title className="title " >{item.name} ({item.colour})</Card.Title>
+													<Card.Text className="sub1">by {item.seller_name}</Card.Text>
+												</Card.Body>
+											</Card>
+										</React.Fragment>
+									);
+								})
+								}
+							</Row>
+						</Col>
 					</Row>
 				</BasePage>
-			</React.Fragment>
+			</React.Fragment >
 		);
 	}
 }
