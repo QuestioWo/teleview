@@ -2,7 +2,9 @@
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/QuestioWo/test-django-full-stack.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/QuestioWo/test-django-full-stack/context:python)
 
 # Nouvique
-A web application built for the WAD2 course that is meant to fill the gap in the store front market of supporting small unique businesses and helping them grow through interactions with their customers and peers
+A full-stack web app built for the WAD2 course that is meant to fill the gap in the store front market of supporting small unique businesses and helping them grow through interactions with their customers and peers. Utilises React and Django for the front and back ends with Stripe support for processing payments and pay-outs.
+
+### CURRENTLY THIS PROJECT IS NOT BEING WORKED ON AND THERE IS NO PLANS TO IN THE FUTURE. PLEASE CONTACT [@QuestioWo](https://github.com/QuestioWo) FOR DETAILS ABOUT REUSING/EXTENDING THIS PROJECT
 
 ## Running Locally
 
